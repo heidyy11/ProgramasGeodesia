@@ -6,7 +6,7 @@ import math
 import numpy as np
 import plotly.graph_objects as go
 import plotly.offline as pyo
-from src import Nivelacion_Diferencial
+import Nivelacion_Diferencial
 
 
 def latitudes():
