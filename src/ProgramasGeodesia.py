@@ -512,11 +512,30 @@ def biseccion():
     print("*" * 28)
     print("Programa Bisección Geodésica")
 
-    # Lectura de coordenadas de A y B
-    NA = float(input("Inserte Norte de A: "))
-    EA = float(input("Inserte Este de A: "))
-    NB = float(input("Inserte Norte de B: "))
-    EB = float(input("Inserte Este de B: "))
+    # Lectura de coordenadas de A y B con validación
+    while True:
+        NA = float(input("Inserte Norte de A: "))
+        if -90 <= NA <= 90:
+            break
+        print("Valor inválido. La latitud debe estar entre -90 y 90.")
+
+    while True:
+        EA = float(input("Inserte Este de A: "))
+        if -180 <= EA <= 180:
+            break
+        print("Valor inválido. La longitud debe estar entre -180 y 180.")
+
+    while True:
+        NB = float(input("Inserte Norte de B: "))
+        if -90 <= NB <= 90:
+            break
+        print("Valor inválido. La latitud debe estar entre -90 y 90.")
+
+    while True:
+        EB = float(input("Inserte Este de B: "))
+        if -180 <= EB <= 180:
+            break
+        print("Valor inválido. La longitud debe estar entre -180 y 180.")
 
     #  Función auxiliar DMS → grados decimales
     def dms_a_grados(g, m, s):
@@ -543,7 +562,6 @@ def biseccion():
     AP = AB * math.sin(math.radians(beta)) / math.sin(math.radians(Ro))
 
     # Azimut de AB (bearing desde A hacia B)
-    # usamos atan2(Este, Norte) para medir desde el norte
     az_AB = (math.degrees(math.atan2(dx, dy))) % 360
 
     # Azimut desde A hacia P
@@ -564,7 +582,6 @@ def biseccion():
 
     #  Opción de gráfica
     if int(input("¿Quieres dibujarlo? (1=Sí, 2=No): ")) == 1:
-        # cerramos el polígono
         xs = [EA, EB, EP, EA]
         ys = [NA, NB, NP, NA]
 
@@ -591,7 +608,7 @@ def areaCuadrilatero():
         b = 6356752.3142  # Radio polar
         f_inv = 282.257223563  # Aplanamiento inverso
         f = 1 / f_inv  # Aplamamiento
-        e = np.sqrt(1 - (b / a) ** 2)  # Excentrisidad
+        e = np.sqrt(1 - (b / a) ** 2)  # Excentricidad
         e2 = (2 / f_inv) - (1 / f_inv ** 2)
         print("Radio ecuatorial (m) =", a)
         print("Radio polar (m) =", b)
@@ -609,54 +626,73 @@ def areaCuadrilatero():
         Z = ((1 - e ** 2) * N) * np.sin(lat)
         return X, Y, Z
 
+    def input_latitud(label):
+        while True:
+            g = int(input(f"{label} (°): "))
+            if -90 <= g <= 90:
+                break
+            print("⚠️ La latitud debe estar entre -90° y 90°.")
+        while True:
+            m = int(input(f"{label} ('): "))
+            if 0 <= m < 60:
+                break
+            print("⚠️ Los minutos deben estar entre 0 y 59.")
+        while True:
+            s = int(input(f"{label} (\"): "))
+            if 0 <= s < 60:
+                break
+            print("⚠️ Los segundos deben estar entre 0 y 59.")
+        return g + m / 60 + s / 3600
+
+    def input_longitud(label):
+        while True:
+            g = int(input(f"{label} (°): "))
+            if -180 <= g <= 180:
+                break
+            print("⚠️ La longitud debe estar entre -180° y 180°.")
+        while True:
+            m = int(input(f"{label} ('): "))
+            if 0 <= m < 60:
+                break
+            print("⚠️ Los minutos deben estar entre 0 y 59.")
+        while True:
+            s = int(input(f"{label} (\"): "))
+            if 0 <= s < 60:
+                break
+            print("⚠️ Los segundos deben estar entre 0 y 59.")
+        return g + m / 60 + s / 3600
+
     while True:
-        print("Ingrese la latitud del vertice A")
-        alag = int(input("(w) \u00b0: "))
-        alam = int(input("(w) \': "))
-        alas = int(input("(w) \": "))
-        ala = alag + alam / 60 + alas / 3600
+        print("Ingrese la latitud del vértice A")
+        ala = input_latitud("(w)")
         print(ala)
-        print("ingrese la longitud del vertice A")
-        alog = int(input("(ω) \u00b0 >>:"))
-        alom = int(input("(ω) \' >>:"))
-        alos = int(input("(ω) \" >>:"))
-        alo = alog + alom / 60 + alos / 3600
+
+        print("Ingrese la longitud del vértice A")
+        alo = input_longitud("(ω)")
         print(alo)
-        print("ingrese la Latitud del vertice B")
-        blag = int(input("(ω) \u00b0 >>:"))
-        blam = int(input("(ω) \' >>:"))
-        blas = int(input("(ω) \" >>:"))
-        bla = blag + blam / 60 + blas / 3600
+
+        print("Ingrese la latitud del vértice B")
+        bla = input_latitud("(ω)")
         print(bla)
-        print("ingrese la longitud del vertice B")
-        blog = int(input("(ω) \u00b0 >>:"))
-        blom = int(input("(ω) \' >>:"))
-        blos = int(input("(ω) \" >>:"))
-        blo = blog + blom / 60 + blos / 3600
+
+        print("Ingrese la longitud del vértice B")
+        blo = input_longitud("(ω)")
         print(blo)
-        print("ingrese la Latitud del vertice C")
-        clag = int(input("(ω) \u00b0 >>:"))
-        clam = int(input("(ω) \' >>:"))
-        clas = int(input("(ω) \" >>:"))
-        cla = clag + clam / 60 + clas / 3600
+
+        print("Ingrese la latitud del vértice C")
+        cla = input_latitud("(ω)")
         print(cla)
-        print("ingrese la longitud del vertice C")
-        clog = int(input("(ω) \u00b0 >>:"))
-        clom = int(input("(ω) \' >>:"))
-        clos = int(input("(ω) \" >>:"))
-        clo = clog + clom / 60 + clos / 3600
+
+        print("Ingrese la longitud del vértice C")
+        clo = input_longitud("(ω)")
         print(clo)
-        print("ingrese la Latitud del vertice D")
-        dlag = int(input("(ω) \u00b0 >>:"))
-        dlam = int(input("(ω) \' >>:"))
-        dlas = int(input("(ω) \" >>:"))
-        dla = dlag + dlam / 60 + dlas / 3600
+
+        print("Ingrese la latitud del vértice D")
+        dla = input_latitud("(ω)")
         print(dla)
-        print("ingrese la longitud del vertice D")
-        dlog = int(input("(ω) \u00b0 >>:"))
-        dlom = int(input("(ω) \' >>:"))
-        dlos = int(input("(ω) \" >>:"))
-        dlo = dlog + dlom / 60 + dlos / 3600
+
+        print("Ingrese la longitud del vértice D")
+        dlo = input_longitud("(ω)")
         print(dlo)
         break
 
@@ -678,9 +714,9 @@ def areaCuadrilatero():
         return abs(area)
 
     area_bagratuni = calcular_area_bagratuni(coords_geod)
-    print("Area del cuadrilatero (Metodo de Bagratuni) = ", area_bagratuni, "Metros cuadrados")
+    print("Área del cuadrilátero (Método de Bagratuni) =", area_bagratuni, "metros cuadrados")
 
-    # Proyección en 3D sobre el elipsoide
+    # Proyección 3D
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     u = np.linspace(0, 2 * np.pi, 100)
@@ -688,17 +724,14 @@ def areaCuadrilatero():
     x = a * np.outer(np.cos(u), np.sin(v))
     y = a * np.outer(np.sin(u), np.sin(v))
     z = b * np.outer(np.ones(np.size(u)), np.cos(v))
-
     ax.plot_surface(x, y, z, color='c', alpha=0.5, rstride=4, cstride=4, linewidth=0)
 
     coords_cart = [geodetic_to_cartesian(lat, lon) for lat, lon in coords_geod]
     vertices = np.array(coords_cart)
-
     num_steps = 10
     for i in range(len(vertices)):
         start = vertices[i]
         end = vertices[(i + 1) % len(vertices)]
-
         points = []
         for t in np.linspace(0, 1, num_steps):
             point = (1 - t) * start + t * end
@@ -706,11 +739,11 @@ def areaCuadrilatero():
             point = (point / norm) * np.linalg.norm(vertices[0])
             points.append(point)
         first_point = points[0]
-        ax.plot([start[0], first_point[0]], [start[1], first_point[1]], [start[2], first_point[2]],
-                color='r')
+        ax.plot([start[0], first_point[0]], [start[1], first_point[1]], [start[2], first_point[2]], color='r')
         for j in range(num_steps - 1):
             ax.plot([points[j][0], points[j + 1][0]], [points[j][1], points[j + 1][1]],
                     [points[j][2], points[j + 1][2]], color='r')
+
     ax.set_xlim([-a, a])
     ax.set_ylim([-a, a])
     ax.set_zlim([-b, b])
